@@ -1,5 +1,6 @@
 import io
 import sys
+import random
 
 # start is an array with this format ["mar", "14", "2020"]
 # end is an array with this format ["may", "15", "2020"]
@@ -24,14 +25,18 @@ def timeline_extract(start, end, tweets):
 # determine if a tweet is healthy/unhealthy
 def tweet_classifier(healthy, neutral, unhealthy, tweet):
     categories = []
+    unhealthy_cnt = 0
+    healthy_cnt = 0
     for food in unhealthy:
         if food in tweet:
-            categories.append("unhealthy")
-            break
+            unhealthy_cnt += 1
     for food in healthy:
         if food in tweet:
-            categories.append("healthy")
-            break
+            healthy_cnt += 1
+    if healthy_cnt >= unhealthy_cnt:
+        categories.append("healthy")
+    else:
+        categories.append("unhealthy")
     return categories
 
 # percentage of each tweet
@@ -49,6 +54,7 @@ def food_trend_analyze(healthy, neutral, unhealthy, twtlst, year):
                 unhealthy_cnt += 1
                 total += 1
     print(year, ": ", healthy_cnt/total, unhealthy_cnt/total)
+    return (healthy_cnt/total, unhealthy_cnt/total)
 
 # PMI of each tweet
 def food_trend_analyze_pmi(healthy, neutral, unhealthy, twtLsts):
@@ -72,8 +78,12 @@ def food_trend_analyze_pmi(healthy, neutral, unhealthy, twtLsts):
     for twtlst in count_dict_list:
         print(twtlst["healthy"]/(healthy_cnt*twtlst["total"]), twtlst["unhealthy"]/(unhealthy_cnt*twtlst["total"]))
 
-
-
+def create_bootstrapping_dataset(twtlst):
+    lst = []
+    for i in range(len(twtlst)):
+        rd = random.randint(0, len(twtlst)-1)
+        lst.append(twtlst[rd])
+    return lst
 
 def main():
     # open tweet files
@@ -113,22 +123,69 @@ def main():
     print("End extracting!")
     #########################End data analysis#############################
     print("Start analyzing health trend")
-    print("By percentage")
-    food_trend_analyze(healthy, neutral, unhealthy, twt20, "2020")
-    food_trend_analyze(healthy, neutral, unhealthy, twt19, "2019")
-    food_trend_analyze(healthy, neutral, unhealthy, twt18, "2018")
-    food_trend_analyze(healthy, neutral, unhealthy, twt17, "2017")
-    food_trend_analyze(healthy, neutral, unhealthy, twt16, "2016")
-    food_trend_analyze(healthy, neutral, unhealthy, twt15, "2015")
+
+    # print("By percentage")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt20, "2020")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt19, "2019")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt18, "2018")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt17, "2017")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt16, "2016")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt15, "2015")
+    # print("End by percentage")
+
+    print("By percentage bootstrapping")
+    hc19, uc19 = (0, 0)
+    hc18, uc18 = (0, 0)
+    hc17, uc17 = (0, 0)
+    hc16, uc16 = (0, 0)
+    hc15, uc15 = (0, 0)
+    for i in range(10000):
+        twt20_bs = create_bootstrapping_dataset(twt20)
+        twt19_bs = create_bootstrapping_dataset(twt19)
+        twt18_bs = create_bootstrapping_dataset(twt18)
+        twt17_bs = create_bootstrapping_dataset(twt17)
+        twt16_bs = create_bootstrapping_dataset(twt16)
+        twt15_bs = create_bootstrapping_dataset(twt15)
+        h20, u20 = food_trend_analyze(healthy, neutral, unhealthy, twt20_bs, "2020")
+        h19, u19 = food_trend_analyze(healthy, neutral, unhealthy, twt19_bs, "2019")
+        h18, u18 = food_trend_analyze(healthy, neutral, unhealthy, twt18_bs, "2018")
+        h17, u17 = food_trend_analyze(healthy, neutral, unhealthy, twt17_bs, "2017")
+        h16, u16 = food_trend_analyze(healthy, neutral, unhealthy, twt16_bs, "2016")
+        h15, u15 = food_trend_analyze(healthy, neutral, unhealthy, twt15_bs, "2015")
+        if h20 >= h19:
+            hc19 += 1
+        if h20 >= h18:
+            hc18 += 1
+        if h20 >= h17:
+            hc17 += 1
+        if h20 >= h16:
+            hc16 += 1
+        if h20 >= h15:
+            hc15 += 1
+        if u20 >= u19:
+            uc19 += 1 
+        if u20 >= u18:
+            uc18 += 1
+        if u20 >= u17:
+            uc17 += 1
+        if u20 >= u16:
+            uc16 += 1
+        if u20 >= u15:
+            uc15 += 1
+        if i % 100 == 0: 
+            print(i)
+    print(hc19/10000, hc18/10000, hc17/10000, hc16/10000, hc15/10000) 
+    print(uc19/10000, uc18/10000, uc17/10000, uc16/10000, uc15/10000)   
     print("End by percentage")
-    print("By PMI")
-    twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
-    twtlsts4 = [twt17, twt18, twt19, twt20]
-    print("PMI last 6 years")
-    food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts6)
-    print("PMI last 4 years")
-    food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts4)
-    print("End food trend by year analysis")
+
+    # print("By PMI")
+    # twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
+    # twtlsts4 = [twt17, twt18, twt19, twt20]
+    # print("PMI last 6 years")
+    # food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts6)
+    # print("PMI last 4 years")
+    # food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts4)
+    # print("End food trend by year analysis")
 
 
 main()
