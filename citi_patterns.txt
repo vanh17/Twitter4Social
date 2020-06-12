@@ -1,0 +1,7 @@
+Los Angeles		Los Angeles	LAX	LosAngeles	losangeles	Los Angeles County	Hollywood	City of Angeles	Beverly Hills	Long Beach, CA	Long Beach, California	Santa Clarita, California	Santa Clarita, CA
+New York	New York	N.Y.	New York City	N.Y.C	NY	NYC	Brooklyn, NY	Brooklyn, N.Y.	Brooklyn, N.Y.C	Brooklyn, NYC	Brooklyn, New York	Queens, NY	Queens, N.Y.	Queens, N.Y.C.	Queens, NYC	Manhattan, N.Y.C	Manhattan, NYC	Manhattan, New York	Manhattan, NY	Manhattan, N.Y.	The Bronx, NY	The Bronx, N.Y.	The Bronx, NYC	The Bronx, New York	The Bronx, N.Y.C	Bronx, NY	Bronx, N.Y.	Bronx, N.Y.C	Bronx, NYC	Bronx, New York	Kings, NY	Kings, N.Y.	Kings, N.Y.C	Kings, NYC	Kings, New York	Nassau, NY	Nassau, N.Y.	Nassau, N.Y.C	Nassau, NYC	Nassau, New York	Newark, NY	Newark, N.Y.	Newark, N.Y.C	Newark, NYC	Newark, New York	Westchester, NY	Westchester, N.Y.	Weschester, N.Y.C	Weschester, NYC	Westchester, New York	Staten Island, NYC	Staten Island, N.Y.C.	Staten Island, N.Y.	Staten Island, NY	Staten Island, New York
+Chicago	Chicago	Chicago City	Cook, IL	Cook, Illinois	Cook County, IL	Cook County, Illinois	City of Chicago	Elgin, IL	Elgin, Illinois
+Boston	Massachusetts Bay	Boston	Cambridge, MA	Cambridge, Massachusetts	Newton, MA	Newton, Massachusetts
+Philadelphia	Philadelphia	Philly	City of Philedelphia
+Detroit	Detroit	Wayne	Dearborn	Dearborn Heights, MI	Dearborn Heights, Michigan	Wayne, MI	Wayne, Michigan
+Miami	Miami, FL	Miami, Florida	Fort Lauderdale, FL	Fort Lauderdale, Florida	West Palm Beach, FL	West Palm Beach, Florida	Hialeah, FL	Hialeah, Florida	Miami Beach, FL	Miami Beach, Florida
