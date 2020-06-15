@@ -99,9 +99,13 @@ def food_trend_analyze_pmi(healthy, neutral, unhealthy, twtLsts):
             for food in healthy:
                 if food in tweet:
                     count_dict["healthy"] = count_dict["healthy"] + 1
+                    break #original do not break so it counts all the words in the tweet separately, now only count the healthy word appearance with the tweet
+                    # so no matter how many the healthy words there, as long as there is one count it as one .
             for food in unhealthy:
                 if food in tweet:
-                    count_dict["unhealthy"] = count_dict["unhealthy"]
+                    count_dict["unhealthy"] = count_dict["unhealthy"] + 1
+                    break #original do not break so it counts all the words in the tweet separately, now only count the healthy word appearance with the tweet
+                    # so no matter how many the healthy words there, as long as there is one count it as one .
         healthy_cnt += count_dict["healthy"]
         unhealthy_cnt += count_dict["unhealthy"]
         count_dict_list.append(count_dict)
@@ -109,6 +113,22 @@ def food_trend_analyze_pmi(healthy, neutral, unhealthy, twtLsts):
     print(healthy_cnt, unhealthy_cnt)
     for twtlst in count_dict_list:
         print(twtlst["healthy"]/(healthy_cnt*twtlst["total"]), twtlst["unhealthy"]/(unhealthy_cnt*twtlst["total"]))
+
+def food_delivery_analyze_pmi(twtLsts):
+    count_dict_list = []
+    delivery_words = ["grubhub", "ubereat", "postmates", "doordash", "instcart"]
+    delivery_cnt = 0
+    for twtlst in twtLsts:
+        count_dict = {"delivery":0, "total":len(twtlst)}
+        for tweet in twtlst:
+            for word in delivery_words:
+                if word in tweet:
+                    count_dict["delivery"] = count_dict["delivery"] + 1
+                    break
+        delivery_cnt += count_dict["delivery"]
+        count_dict_list.append(count_dict)
+    for twtlst in count_dict_list:
+        print(twtlst["delivery"]/(delivery_cnt*twtlst["total"]))
 
 def create_bootstrapping_dataset(twtlst):
     lst = []
@@ -159,25 +179,25 @@ def main():
     #########################End data analysis#############################
     print("Start analyzing health trend")
 
-    print("By percentage")
-    food_trend_analyze(healthy, neutral, unhealthy, twt20, "2020")
-    food_trend_analyze(healthy, neutral, unhealthy, twt19, "2019")
-    food_trend_analyze(healthy, neutral, unhealthy, twt18, "2018")
-    food_trend_analyze(healthy, neutral, unhealthy, twt17, "2017")
-    food_trend_analyze(healthy, neutral, unhealthy, twt16, "2016")
-    food_trend_analyze(healthy, neutral, unhealthy, twt15, "2015")
-    food_trend_analyze(healthy, neutral, unhealthy, twt14, "2014")
-    print("End by percentage")
+    # print("By percentage")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt20, "2020")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt19, "2019")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt18, "2018")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt17, "2017")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt16, "2016")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt15, "2015")
+    # food_trend_analyze(healthy, neutral, unhealthy, twt14, "2014")
+    # print("End by percentage")
 
-    print("By percentage: 3 healthy 1 unhealthy and total of 4 for division")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt20, "2020")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt19, "2019")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt18, "2018")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt17, "2017")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt16, "2016")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt15, "2015")
-    food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt14, "2014")
-    print("End by percentage with new formular")
+    # print("By percentage: 3 healthy 1 unhealthy and total of 4 for division")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt20, "2020")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt19, "2019")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt18, "2018")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt17, "2017")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt16, "2016")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt15, "2015")
+    # food_trend_analyze_new_formular(healthy, neutral, unhealthy, twt14, "2014")
+    # print("End by percentage with new formular")
 
     # print("By percentage bootstrapping")
     # hc19, uc19 = (0, 0)
@@ -224,14 +244,23 @@ def main():
     # print(uc19/10000, uc18/10000, uc17/10000, uc16/10000, uc15/10000)   
     # print("End by percentage")
 
-    # print("By PMI")
-    # twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
-    # twtlsts4 = [twt17, twt18, twt19, twt20]
-    # print("PMI last 6 years")
-    # food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts6)
-    # print("PMI last 4 years")
-    # food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts4)
-    # print("End food trend by year analysis")
+    print("By PMI")
+    twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
+    twtlsts4 = [twt17, twt18, twt19, twt20]
+    print("PMI last 6 years")
+    food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts6)
+    print("PMI last 4 years")
+    food_trend_analyze_pmi(healthy, neutral, unhealthy, twtlsts4)
+    print("End food trend by year analysis")
+
+    print("By PMI delivery hashtag")
+    twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
+    twtlsts4 = [twt17, twt18, twt19, twt20]
+    print("PMI last 6 years")
+    food_delivery_analyze_pmi(twtlsts6)
+    print("PMI last 4 years")
+    food_delivery_analyze_pmi(twtlsts4)
+    print("End food delivery PMI by year analysis")
 
 
 main()
