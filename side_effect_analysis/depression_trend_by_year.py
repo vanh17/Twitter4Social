@@ -25,6 +25,7 @@ def timeline_extract(start, end, tweets):
 # determine if a tweet is healthy/unhealthy
 def tweet_classifier(depress_hashtags, tweet):
     categories = ["neutral"]
+    r = random.random()
     for depress in depress_hashtags:
         if depress in tweet:
             categories = ["depressive"]
@@ -78,7 +79,7 @@ def food_trend_analyze_pmi(healthy, unhealthy, depress_hashtags, twtLsts):
         print(twtlst["healthy"]/(healthy_cnt*twtlst["total"]), twtlst["unhealthy"]/(unhealthy_cnt*twtlst["total"]))
 
 # PMI of each tweet
-def food_trend_analyze_pmi_2020(healthy, unhealthy, side_effects, twtlst):
+def food_trend_analyze_pmi_2020(healthy, unhealthy, side_effects, twtlst, year):
     count_dict_list = {}
     for food in healthy:
         # add the list of total count of that word, intersection with depression, and PMI
@@ -88,7 +89,7 @@ def food_trend_analyze_pmi_2020(healthy, unhealthy, side_effects, twtlst):
         count_dict_list[food] = [0, 0, 0, "unhealthy"]
     depress_cnt = 0
     for tweet in twtlst:
-            categories = tweet_classifier(side_effects, tweet)
+            categories = tweet_classifier(side_effects, tweet, year)
             if categories[0] == "depressive":
                 depress_cnt += 1
             for food in healthy:
@@ -104,10 +105,23 @@ def food_trend_analyze_pmi_2020(healthy, unhealthy, side_effects, twtlst):
     for food in count_dict_list.keys():
         if count_dict_list[food][1] > 0:
             count_dict_list[food][2] = count_dict_list[food][1] / (count_dict_list[food][0] * depress_cnt)
-    sorted_food_pmi = sorted(count_dict_list.items(), key=lambda x: x[1][2], reverse=True)
+    # comment this out for PMI rank diference  between 2020 and all previous years
+    # sorted_food_pmi = sorted(count_dict_list.items(), key=lambda x: x[1][2], reverse=True)
+    # for i in range(20):
+    #     print(sorted_food_pmi[i])
+    # add this line below to return the dictionary for calculating the difference in PMI
+    return count_dict_list
+
+# To calculate the difference between PMI in 2020 and all previous years
+def food_trend_difference_pmi(year1, year2):
+    diff_dict = {}
+    for food in year1.keys():
+        if food in year2.keys():
+            diff_dict[food] = year1[food][2] - year2[food][2]
+    sorted_food_pmi = sorted(diff_dict.items(), key=lambda x: x[1], reverse=True)
     for i in range(20):
-        print(sorted_food_pmi[i])
-    print(depress_cnt)
+         print(sorted_food_pmi[i])
+
 
 def depression_hashtag_analyze_pmi(depress_hashtags,twtLsts):
     count_dict_list = []
@@ -177,38 +191,38 @@ def main():
     #########################End data analysis#############################
     print("Start analyzing depression trend")
 
-    print("By percentage")
-    food_trend_analyze(depress_hashtags, twt20, "2020")
-    food_trend_analyze(depress_hashtags, twt19, "2019")
-    food_trend_analyze(depress_hashtags, twt18, "2018")
-    food_trend_analyze(depress_hashtags, twt17, "2017")
-    food_trend_analyze(depress_hashtags, twt16, "2016")
-    food_trend_analyze(depress_hashtags, twt15, "2015")
-    food_trend_analyze(depress_hashtags, twt14, "2014")
-    print("End by percentage")
+    # print("By percentage")
+    # food_trend_analyze(depress_hashtags, twt20, "2020")
+    # food_trend_analyze(depress_hashtags, twt19, "2019")
+    # food_trend_analyze(depress_hashtags, twt18, "2018")
+    # food_trend_analyze(depress_hashtags, twt17, "2017")
+    # food_trend_analyze(depress_hashtags, twt16, "2016")
+    # food_trend_analyze(depress_hashtags, twt15, "2015")
+    # food_trend_analyze(depress_hashtags, twt14, "2014")
+    # print("End by percentage")
 
-    print("By PMI depression hashtag")
-    twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
-    twtlsts4 = [twt17, twt18, twt19, twt20]
-    print("PMI last 6 years")
-    depression_hashtag_analyze_pmi(depress_hashtags, twtlsts6)
-    print("PMI last 4 years")
-    depression_hashtag_analyze_pmi(depress_hashtags, twtlsts4)
-    print("End food delivery PMI by year analysis")
+    # print("By PMI depression hashtag")
+    # twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
+    # twtlsts4 = [twt17, twt18, twt19, twt20]
+    # print("PMI last 6 years")
+    # depression_hashtag_analyze_pmi(depress_hashtags, twtlsts6)
+    # print("PMI last 4 years")
+    # depression_hashtag_analyze_pmi(depress_hashtags, twtlsts4)
+    # print("End food delivery PMI by year analysis")
 
-    print("By PMI")
-    twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
-    twtlsts4 = [twt17, twt18, twt19, twt20]
-    print("PMI last 6 years")
-    food_trend_analyze_pmi(healthy, unhealthy, depress_hashtags, twtlsts6)
-    print("PMI last 4 years")
-    food_trend_analyze_pmi(healthy, unhealthy, depress_hashtags, twtlsts4)
-    print("End food trend by year analysis")
+    # print("By PMI")
+    # twtlsts6 = [twt15, twt16, twt17, twt18, twt19, twt20]
+    # twtlsts4 = [twt17, twt18, twt19, twt20]
+    # print("PMI last 6 years")
+    # food_trend_analyze_pmi(healthy, unhealthy, depress_hashtags, twtlsts6)
+    # print("PMI last 4 years")
+    # food_trend_analyze_pmi(healthy, unhealthy, depress_hashtags, twtlsts4)
+    # print("End food trend by year analysis")
 
     print("PMI between depression and food words")
-    food_trend_analyze_pmi_2020(healthy, unhealthy, depress_hashtags, twt20)
-    print("PMI between furlough and food words")
-    food_trend_analyze_pmi_2020(healthy, unhealthy, ["furlough"], twt20)
+    pmi2020 = food_trend_analyze_pmi_2020(healthy, unhealthy, depress_hashtags, twt20)
+    pmiAll = food_trend_analyze_pmi_2020(healthy, unhealthy, depress_hashtags, twt19+twt18+twt17+twt16+twt15)
+    food_trend_difference_pmi(pmi2020, pmiAll)
 
 
 
